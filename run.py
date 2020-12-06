@@ -1,7 +1,16 @@
-lines = []
 with open("input.txt") as f:
-    lines = [x.strip() for x in f.readlines()]
+    data = f.read()
+    lines = data.splitlines()
 print(lines)
 print(len(lines), "lines in input.txt")
-# split = [line.split() for line in lines]
-# print(split)
+
+
+def line_transform(line):
+    split = [line.split() for line in lines]
+    return line
+
+
+line_groups = line.split("\n\n")
+lines = [line_transform(line) for line in lines]
+
+## end of boilerplate
