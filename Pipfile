@@ -7,6 +7,7 @@ name = "pypi"
 advent-of-code-data = "*"
 pipfile = "*"
 black = "*"
+pylint = "*"
 
 [dev-packages]
 black = "*"

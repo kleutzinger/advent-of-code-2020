@@ -1,16 +1,27 @@
+import os
+
+# change to dir of script
+os.chdir(os.path.dirname(__file__))
+
 with open("input.txt") as f:
-    data = f.read()
+    data = f.read()  # entire file as string
     lines = data.splitlines()
 print(lines)
 print(len(lines), "lines in input.txt")
 
 
+def ans(answer):
+    # store answer to clipboard
+    print(answer, "| in clipboard")
+    os.system(f'echo "{answer}" | xsel --clipboard')
+
+
 def line_transform(line):
-    split = [line.split() for line in lines]
+    # split = [line.split() for line in lines]
     return line
 
 
-line_groups = line.split("\n\n")
-lines = [line_transform(line) for line in lines]
+line_groups = data.split("\n\n")  # lines split by double newlines
+lines = [line_transform(line) for line in lines]  # apply line_transform to each line
 
 ## end of boilerplate
