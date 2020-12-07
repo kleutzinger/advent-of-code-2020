@@ -29,7 +29,6 @@ def line_transform(line):
 line_groups = data.split("\n\n")  # lines split by double newlines
 lines = [line_transform(line) for line in lines]  # apply line_transform to each line
 
-L, I, D = list, int, dict
-P, M = print, map
-S, J = str.split, str.join
+L, I, D, S = list, int, dict, set
+P, E, R, M = print, enumerate, range, map
 ## end of boilerplate
