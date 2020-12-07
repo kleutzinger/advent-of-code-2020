@@ -18,7 +18,7 @@ print(len(lines), "lines in input.txt")
 def ans(answer):
     # store answer to clipboard
     print(answer, "| in clipboard")
-    os.system(f'echo "{answer}" | xsel --clipboard')
+    os.system(f'echo "{answer}"| xclip -selection clipboard -in')
 
 
 def line_transform(line):
