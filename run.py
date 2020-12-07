@@ -3,9 +3,14 @@ import os
 # change to dir of script
 os.chdir(os.path.dirname(__file__))
 
-with open("input.txt") as f:
-    data = f.read()  # entire file as string
-    lines = data.splitlines()
+try:
+    with open("input.txt") as f:
+        data = f.read()  # entire file as string
+        lines = data.splitlines()
+except:
+    print("no input.txt")
+    data, lines = "", []
+
 print(lines)
 print(len(lines), "lines in input.txt")
 
