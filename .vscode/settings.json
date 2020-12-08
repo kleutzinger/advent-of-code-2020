@@ -1,3 +1,20 @@
 {
-  "python.pythonPath": "/home/kevin/.local/share/virtualenvs/advent-of-code-2020-snRicgK3/bin/python"
+  "python.pythonPath": "/home/kevin/.local/share/virtualenvs/advent-of-code-2020-snRicgK3/bin/python",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#9634ce",
+    "activityBar.activeBorder": "#cd9532",
+    "activityBar.background": "#9634ce",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#cd9532",
+    "activityBarBadge.foreground": "#15202b",
+    "statusBar.background": "#7928a7",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#9634ce",
+    "titleBar.activeBackground": "#7928a7",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#7928a799",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#7928a7"
 }
