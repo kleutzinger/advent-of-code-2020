@@ -1,7 +1,7 @@
 import os
 
 # change to dir of script
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 with open("input.txt") as f:
     data = f.read()  # entire file as string
