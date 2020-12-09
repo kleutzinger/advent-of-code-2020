@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/home/kevin/.local/share/virtualenvs/advent-of-code-2020-snRicgK3/bin/python",
+  "python.pythonPath": "/home/kevin/gits/advent-of-code-2020/.venv/bin/python3.9",
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#9634ce",
     "activityBar.activeBorder": "#cd9532",
