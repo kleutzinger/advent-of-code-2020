@@ -11,6 +11,7 @@ except:
     print("no input.txt")
     data, lines = "", []
 
+line_groups = data.split("\n\n")  # lines split by double newlines
 print(lines)
 print(len(lines), "lines in input.txt")
 
@@ -23,14 +24,14 @@ def ans(answer):
 
 L, I, D, S = list, int, dict, set
 P, E, R, M = print, enumerate, range, map
-## end of boilerplate
+
+## end of boilerplate ##
 
 
 def line_transform(line):
     # split = [line.split() for line in lines]
-    # ints = [int(line) for line in lines]
+    # return int(line)
     return line
 
 
-line_groups = data.split("\n\n")  # lines split by double newlines
 lines = [line_transform(line) for line in lines]  # apply line_transform to each line

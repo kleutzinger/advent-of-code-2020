@@ -77,6 +77,13 @@ for s in srtd:
 print(paths)
 ans(paths[186])  # 13816758796288
 
+## elegant re-write
+paths = dict({0: 1})
+for s in srtd:
+    paths[s] = sum([paths.get(s - d, 0) for d in [1, 2, 3]])
+ans(paths[srtd[-1]])  # 13816758796288
+
+
 """
 everything below is me going way too crazy trying to figure
 out a recursive solution to a pretty simple problem.
