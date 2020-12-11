@@ -65,6 +65,26 @@ def adjacent(_seats, x, y):
     return adj
 
 
+import os
+
+import png
+
+
+def save_as_png(arrs, idx, folder):
+    trans = {"L": 0, ".": 150, "#": 255}
+    _arrs = copy.deepcopy(arrs)
+    for y in range(len(arrs)):
+        for x in range(len(arrs[0])):
+            _arrs[y][x] = trans[arrs[y][x]]
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    outfile = os.path.join(folder, str(idx).zfill(5) + ".png")
+    png.from_array(_arrs, "L").save(outfile)
+
+
+# print([[sub[x]for x in (0,7)] for sub in l ])
+
+
 def nice_print(arrs):
     trans = str.maketrans("L#.", "□■ ")
     ls = ["".join(line).translate(trans) for line in arrs]
@@ -107,13 +127,13 @@ def round(_seats):
 last = occd(seats)
 for i in range(5000):
     nice_print(seats)
+    save_as_png(seats, i, "pt1_frames")
     nu_seats = round(seats)
     if eq(nu_seats, seats):
         ans(occd(nu_seats))  # 2261
         input("continue to pt 2?")
         break
     seats = nu_seats
-
 
 ## part 2
 
@@ -161,6 +181,7 @@ def round2(_seats):
 seats = seats_part2
 last = occd(seats)
 for i in range(500000000):
+    save_as_png(seats, i, "pt2_frames")
     nice_print(seats)
     print()
     nu_seats = round2(seats)
