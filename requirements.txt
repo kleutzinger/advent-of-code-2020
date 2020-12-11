@@ -14,6 +14,7 @@ mypy-extensions==0.4.3
 pathspec==0.8.1
 Pebble==4.5.3
 pylint==2.6.0
+pypng==0.0.20
 python-dateutil==2.8.1
 pytz==2020.4
 regex==2020.11.13
