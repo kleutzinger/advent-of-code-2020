@@ -66,9 +66,9 @@ def adjacent(_seats, x, y):
 
 
 def nice_print(arrs):
-    for line in arrs:
-        print("".join(line))
-    print()
+    trans = str.maketrans("L#.", "□■ ")
+    ls = ["".join(line).translate(trans) for line in arrs]
+    print("\n".join(ls))
 
 
 def occd(seats):
