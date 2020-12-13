@@ -35,3 +35,6 @@ def line_transform(line):
 
 
 lines = [line_transform(line) for line in lines]  # apply line_transform to each line
+
+for line in lines:
+    pass
