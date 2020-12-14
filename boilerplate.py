@@ -1,3 +1,4 @@
+############### boilerplate ####################################################
 import os
 from itertools import chain, combinations
 from copy import deepcopy
@@ -41,7 +42,7 @@ def ans(answer):
 L, I, D, S = list, int, dict, set
 P, E, R, M = print, enumerate, range, map
 
-## end of boilerplate ##
+############### end of boilerplate #############################################
 
 
 def line_transform(line):
