@@ -1,4 +1,6 @@
 import os
+from itertools import chain, combinations
+from copy import deepcopy
 
 # change to dir of script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +16,20 @@ except:
 line_groups = data.split("\n\n")  # lines split by double newlines
 print(lines)
 print(len(lines), "lines in input.txt")
+
+
+def coords(arr2d):
+    # return [(x0,y0), (x1, y0), ...]
+    coords = []
+    for y in range(len(arr2d)):
+        for x in range(len(arr2d[0])):
+            coords.append((x, y))
+    return coords
+
+
+def powerset(iterable):
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
 def ans(answer):
