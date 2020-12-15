@@ -1,3 +1,4 @@
 node_modules
 .venv
 11/pt*
+.vscode
