@@ -39,6 +39,11 @@ def ans(answer):
     os.system(f'echo "{answer}"| xclip -selection clipboard -in')
 
 
+strips = lambda l: list(map(str.strip, l))
+ints = lambda l: list(map(int, l))
+commas = lambda s: s.split(",")
+comma_ints = lambda s: ints(strips(s.split(",")))
+
 L, I, D, S = list, int, dict, set
 P, E, R, M = print, enumerate, range, map
 

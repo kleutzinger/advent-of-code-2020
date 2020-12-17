@@ -5,6 +5,8 @@ set advent_dir /home/kevin/gits/advent-of-code-2020
 cd $advent_dir
 # tomorrow's date (run this before midnight PST)
 set day ( date --date="tomorrow" +%e )
+set year ( date +%Y )
+echo "https://adventofcode.com/$year/"
 if test -d $day
     echo "folder $day exists. did not overwrite"
     echo "cd $day"
