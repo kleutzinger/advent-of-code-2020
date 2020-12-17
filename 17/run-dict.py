@@ -51,7 +51,7 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-import numpy as np
+from collections import defaultdict
 
 
 def line_transform(line):
@@ -62,29 +62,36 @@ def line_transform(line):
 
 lines = [line_transform(line) for line in lines]  # apply line_transform to each line
 
-DIM = 40
-# world = [[["."] * DIM] * DIM] * DIM
-world = [
-    [[[[False] for w in range(DIM)] for k in range(DIM)] for j in range(DIM)]
-    for i in range(DIM)
-]
-world = np.array(world, dtype=bool)
-woffset = DIM // 2
-zoffset = DIM // 2
-yoffset = DIM // 2
-xoffset = DIM // 2
+# bounding box for alive spots
+min_dim = [0, 0, 0, 0]
+max_dim = [0, 0, 0, 0]
+
+# accessed coord, expand world bounds accordingly
+# might over-expand
+def expand_world_bounds(coord, cur_min, cur_max):
+    nu_min = cur_min
+    nu_max = cur_max
+    for didx in range(4):
+        if coord[didx] - 1 <= nu_min[didx]:
+            nu_min[didx] = coord[didx] - 1
+        if coord[didx] + 1 >= nu_max[didx]:
+            nu_max[didx] = coord[didx] + 1
+    return nu_min, nu_max
+
+# set up initial slice
+worldd = defaultdict(bool)
+yoffset = 0
 for line in lines:
     # put in middle
     for idx, c in E(line):
-        print(zoffset, yoffset, xoffset, idx, c)
-        world[woffset][zoffset][yoffset][xoffset + idx] = c
+        if c == "#":
+            coord = (0, 0, yoffset, idx)
+            worldd[coord] = True
+            min_dim, max_dim = expand_world_bounds(coord, min_dim, max_dim)
     yoffset += 1
-# print(world)
-
-world_bounds = [[0, 0], [0, 0], [0, 0], [0, 0]]
 
 
-def neighbors(world_, x, y, z, w):
+def neighbors(worldd, x, y, z, w):
     offs = (-1, 0, 1)
     adj = 0
     for dw in offs:
@@ -97,51 +104,46 @@ def neighbors(world_, x, y, z, w):
                     yy = y + dy
                     zz = z + dz
                     ww = w + dw
-                    if any([yy < 0, xx < 0, zz < 0, ww < 0]):
-                        continue
-                    if any([yy >= DIM, xx >= DIM, zz >= DIM, ww >= DIM]):
-                        continue
-                    if world_[ww][zz][yy][xx] == True:
+                    if worldd[(ww, zz, yy, xx)] == True:
                         adj += 1
+    # i check 80 values
     return adj
 
-
-def round(_seats):
+# check inside bounding boxes
+def round(_seats, min_dim_, max_dim_):
+    nu_min_dim, nu_max_dim = deepcopy(min_dim_), deepcopy(max_dim_)
     nu_seats = deepcopy(_seats)
-    for w in range(DIM):
-        for z in range(DIM):
-            for y in range(DIM):
-                for x in range(DIM):
+    for w in range(min_dim[0], max_dim[0]+1):
+        for z in range(min_dim[1], max_dim[1]+1):
+            for y in range(min_dim[2], max_dim[2]+1):
+                for x in range(min_dim[3], max_dim[3]+1):
                     adj = neighbors(_seats, x, y, z, w)
-                    cur = _seats[w][z][y][x]
+                    cur_coord = (w, z, y, x)
+                    cur = _seats[cur_coord]
                     if cur == True:
                         if adj not in (2, 3):
-                            nu_seats[w][z][y][x] = False
+                            nu_seats[cur_coord] = False
                     if cur == False and adj == 3:
-                        nu_seats[w][z][y][x] = True
-    return nu_seats
+                        nu_seats[cur_coord] = True
+                        # fmt: off
+                        nu_min_dim, nu_max_dim = expand_world_bounds(cur_coord, nu_min_dim, nu_max_dim)
+    # print(list(zip(nu_min_dim, nu_max_dim)))
+    return nu_seats, nu_min_dim, nu_max_dim
 
 
 def active(seats):
     tot = 0
-    for w in range(DIM):
-        for z in range(DIM):
-            for y in range(DIM):
-                for x in range(DIM):
-                    if seats[w][z][y][x] == True:
-                        tot += 1
+    for i in seats.values():
+        if i:
+            tot += 1
     return tot
 
 
-print(active(world))
-# exit()
+print(active(worldd))
 for i in range(6):
-    # print(world)
-    acc = active(world)
-    print(acc)
-    world = round(world)
+    worldd, min_dim, max_dim = round(worldd, min_dim, max_dim)
+    acc = active(worldd)
+    print(acc, 'now active')
+    print(list(zip(min_dim,max_dim)))
 
-ans(acc)
-
-# not 307
-# part 1:  346?
+ans(acc) # part 2: 1632
