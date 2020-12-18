@@ -15,7 +15,7 @@ except:
     data, lines = "", []
 
 line_groups = data.split("\n\n")  # lines split by double newlines
-print(lines)
+# print(lines)
 print(len(lines), "lines in input.txt")
 
 
