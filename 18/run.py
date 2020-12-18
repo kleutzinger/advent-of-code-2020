@@ -118,6 +118,29 @@ def tokenize(s):
     return relevant_chunks
 
 
+def tokenize_improved(s):
+    # better tokenization.
+    # shouldn't throw exceptions,
+    # allows tokenizing parens
+    s = s.replace("(", " ( ").replace(")", " ) ")
+    chunks = s.split(" ")
+    relevant_chunks = []
+    for chunk in chunks:
+        chunk = chunk.replace(" ", "")
+        if chunk == "":
+            continue
+        elif chunk in "()+*-":
+            relevant_chunks.append(chunk)
+        else:
+            try:
+                num = int(chunk)
+                relevant_chunks.append(num)
+            except:
+                print(f"chunk {chunk}\nin {s}\nis not a number")
+                exit()
+    return relevant_chunks
+
+
 def calc(tokens, part2=True):
     # assume no parentheses
     # outputs a single value from a token-list with [num, +, -, *]
@@ -151,7 +174,7 @@ def calc(tokens, part2=True):
 def eval2(s):
     # assume no parentheses
     # evaluate a simple expression string
-    tokens = tokenize(s)
+    tokens = tokenize_improved(s)
     calcd = calc(tokens)  # change for for part 1 ans
     return calcd
 
