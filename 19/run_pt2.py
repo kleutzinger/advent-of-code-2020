@@ -49,8 +49,10 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-r1 = dict()
-r2 = dict()
+# {int : [int|str, int|str, ...]}
+# int => nonterminal, str => terminal
+r1 = dict()  # first rewrite rules
+r2 = dict()  # optional right side of pipe rewrite rules
 
 # this is for part 2
 add_me = """
@@ -60,8 +62,6 @@ nu_grup = line_groups[0] + add_me
 
 for line in nu_grup.split("\n"):
     # set up rewrite rules
-    # r1 is the left side of the pipe
-    # r2 is the optional right side of a pipe
     l, r = line.split(":")
     for idx, out in E(r.split("|")):
         l = int(l)
@@ -88,13 +88,15 @@ def find_rewrite(guys=[]):
     # find one or two possible rewrites for a
     # list of terminals and nonterminals.
     # it finds the first nonterminal left to right
-    # returns a list of 1 or 2 rewrites on that nonterminal
+    # returns a list of 1 or 2 rewrites based on that nonterminal
     # (1 or 2 depending if its rewrite rule has a pipe in it)
+    # returns None if list contains no nonterminals
     rewritten = False
     nu_guys = []
-    for idx, c in E(guys):
+    for idx, c in enumerate(guys):
         if type(c) == str:
-            pass
+            # terminal found, continue search
+            continue
         rewrite1 = r1.get(c, [])
         if rewrite1:
             rewritten = True
