@@ -1,29 +1,33 @@
 ############### boilerplate ####################################################
 import os
+import sys
 from itertools import chain, combinations
 from copy import deepcopy
 
 # change to dir of script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
+input_file = "input.txt"
+if "s" in sys.argv:
+    input_file = "input_small.txt"
 try:
-    with open("input.txt") as f:
+    with open(input_file) as f:
         data = f.read()  # entire file as string
         lines = data.splitlines()
 except:
-    print("no input.txt")
+    print("no " + input_file)
     data, lines = "", []
 
 line_groups = data.split("\n\n")  # lines split by double newlines
+# line_groups = [l.strip() for l in line_groups]  # remove trailing newlines
 # print(lines)
-print(len(lines), "lines in input.txt")
+print(len(lines), "lines in", input_file)
 
 
 def coords(arr2d):
     # return [(x0,y0), (x1, y0), ...]
     coords = []
     for y in range(len(arr2d)):
-        for x in range(len(arr2d[0])):
+        for x in range(len(arr2d[y])):
             coords.append((x, y))
     return coords
 
@@ -58,5 +62,5 @@ def line_transform(line):
 
 lines = [line_transform(line) for line in lines]  # apply line_transform to each line
 
-for line in lines:
+for idx, line in enumerate(lines):
     pass
