@@ -53,7 +53,7 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-tiles = {}
+tiles = dict()
 for tile in data.split("\n\n"):
     tile = tile.strip()
     tile_lines = tile.split("\n")
@@ -66,7 +66,7 @@ for tile in data.split("\n\n"):
     tiles[_id] = squares
 # print(list(tiles.items()))
 
-
+# get borders of a tile
 def top(t):
     return t[0]
 
@@ -89,6 +89,8 @@ def sides(t):
 
 
 def sides8(tile):
+    # get all 8 possible borders
+    # 4 sides * 2 (unflipped|flipped)
     normals = sides(tile)
     flipped = [i[::-1] for i in sides(tile)]
     my_sides = normals + flipped
@@ -104,8 +106,6 @@ test = tiles[1847]
 # 8 `sides` per tile each one flipped
 # top,right,bottom,left, reversed(top,right,bottom,left)
 
-idxside = {0: "t", 1: "r", 2: "b", 3: "l", 4: "tr", 5: "rr", 6: "br", 7: "lr"}
-
 all_sides = dict()
 for _id, tile in tiles.items():
     # for i,s in E(my_sides):
@@ -114,6 +114,8 @@ for _id, tile in tiles.items():
 
 touching = dict()
 shared_sides = dict()
+# touching: find tile_ids that touch each other
+# shared_sides: find sides per-tile that are compatible with another tile's side
 for o_id, o_tile in tiles.items():
     # try to find matching sides somewhere
     # matching side = (id, idx)
@@ -132,28 +134,27 @@ for o_id, o_tile in tiles.items():
                     touching[o_id] = already_touching
     shared_sides[o_id] = matching_sides
 
-# for k, v in shared_sides.items():
-#     print([len(i) for i in v])
+for k, v in shared_sides.items():
+    pass
+    # print([i for i in v])
 
-# every side has only one that it can pair up with
+# every side has one or zero sides that it can pair up with
 print("corners found, only two shared sides")
 tot = 1
 for k, v in touching.items():
     if len(v) == 2:
-        print(k, shared_sides[k])
+        print(str(k) + ":", shared_sides[k])
         tot *= k
 # not 25012634094023 (too high)
 ans(tot)  # 21599955909991
 
+## part 2 ##
+
 # now actually find indexes, rotations for each tile
 """corners:
-2521 
-2633 
-3067 
-1061 
+2521 2633 3067 1061 
 """
-positions = dict()
-# assume 3067 is top left, whatever
+# assume 3067? is top right, whatever
 # 12 x 12 box i suppose
 # which index is on top?
 # x, y, r
@@ -163,7 +164,8 @@ positions = dict()
 # position
 
 
-def show(t, spacing = ' ',monsters=set()):
+def show(t, spacing=" ", monsters=set()):
+    # print out a tile
     out = ""
     s = spacing
     for y in range(len(t)):
@@ -182,7 +184,7 @@ def show(t, spacing = ' ',monsters=set()):
     print(out)
 
 
-def show2(t, monsters = set()):
+def show2(t, monsters=set()):
     # with spaces between lines and columns
     out = ""
     width = len(t[0])
@@ -199,9 +201,9 @@ def show2(t, monsters = set()):
                 out += "."
             else:
                 out += str(cur)[0]
-            if ((x+1) % posts)  == 0:
+            if ((x + 1) % posts) == 0:
                 out += " "
-        if ((y+1) % posts)  == 0:
+        if ((y + 1) % posts) == 0:
             out += "\n" + hoz_line + "\n"
         else:
             out += "\n"
@@ -209,22 +211,27 @@ def show2(t, monsters = set()):
 
 
 def rotate(t):
-    # rotate counter_clockwise once
+    # rotate a tile counter_clockwise once
     nu = deepcopy(t)
     return list(zip(*nu))[::-1]
 
 
 def hoz_flip(t):
+    # reverse a tile left to right
     nu = deepcopy(t)
     return [l[::-1] for l in nu]
 
 
 def eq(r1, r2):
+    # check if r1's contents == r2's contents
+    # can do eq(tuple, list)
     z = zip(r1, r2)
     return all([a == b for a, b in z])
 
 
 def orientations(t):
+    # return a list of the tile re-worked into 8 possible orientations
+    # [rot0, rot1, rot2, rot3] + hoz_flip([rot0, rot1, rot2, rot3])
     nu = deepcopy(t)
     ors = []
     for _ in range(4):
@@ -237,14 +244,13 @@ def orientations(t):
     return ors
 
 
-# dicts: touching, tiles, shared_sides, all_sides
-TOPRIGHT = 3067
-positions[3067] = (11, 0, 0)
-coordinates = dict()
-coordinates[(11, 0)] = (3067, 0)
-
-
 def place_below(anchor_id, flipper_id):
+    # anchor is an oriented, positioned tile on the grid
+    # flipper is a tile we attempt to orient and place below the anchor
+    # we know which 2-4 tiles touch the anchor, and each has 8 orientations
+    # but only one tile+orientation can attatch to the bottom
+    # if flipper has no viable top for anchors bottom, return False
+    # else return flipper_id, (fx, fy, frot)
     anchor = deepcopy(tiles[anchor_id])
     flipper = deepcopy(tiles[flipper_id])
     ankx, anky, ankrot = positions[anchor_id]
@@ -260,6 +266,7 @@ def place_below(anchor_id, flipper_id):
 
 
 def place_left(anchor_id, flipper_id):
+    # same as above, but placing to the left
     anchor = deepcopy(tiles[anchor_id])
     flipper = deepcopy(tiles[flipper_id])
     ankx, anky, ankrot = positions[anchor_id]
@@ -274,42 +281,50 @@ def place_left(anchor_id, flipper_id):
     return False
 
 
-cur_anchor = TOPRIGHT
+# dicts: touching, tiles, shared_sides, all_sides
+positions = dict()
+# positions = {tile_id -> ( coord_x, coord_y, rotation_index(0-8) )}
+# map tile id to
+coordinates = dict()
+# coordinates = { (x,y) -> ( tile_id, rotation_index ) }
 
+# hardcode and place a top right value
+# chose this one because it does not require any pre-rotation
+TOPRIGHT_ID = 3067
+positions[TOPRIGHT_ID] = (11, 0, 0)
+coordinates[(11, 0)] = (TOPRIGHT_ID, 0)
 
-curx = 11
-cury = 0
-
+# move anchor along the top, filling in all positions to the left
+# cur_anchor is a tile_id from where we attempt to attatch `flippers`
+# flippers are chosen from the cur_anchor's `touching` dict items
+cur_anchor = TOPRIGHT_ID
 x_idx = 11
 while x_idx > 0:
     for t in touching[cur_anchor]:
         worked = place_left(cur_anchor, t)
         if worked:
+            # set new anchor to just-placed tile, and move left
             x_idx -= 1
             cur_anchor = worked[0]
             break
 
-# top row is filled
-
+# top row is filled with tiles
+# fill in each column going down from the top
+# go down columns right to left
 for x_offset in range(12)[::-1]:
+    # move left to next column
     y_idx = 0
     cur_anchor = coordinates[(x_offset, y_idx)][0]  # just id
     while y_idx < 11:
         for t in touching[cur_anchor]:
             worked = place_below(cur_anchor, t)
             if worked:
+                # set new anchor to just-placed tile, and move down
                 y_idx += 1
                 cur_anchor = worked[0]
                 break
-
+# each coordinate now has a tile_id and an orientation associated with it
 print(coordinates)
-# coordinates filled in by id
-for y in range(12):
-    for x in range(2, 3):
-        key, rot = coordinates[(x, y)]
-        shape = orientations(tiles[key])[rot]
-        # print("-"*24)
-        # show(shape)
 
 print("corners and their orientations: ")
 for c in ((0, 0), (11, 0), (11, 11), (0, 11)):
@@ -317,22 +332,23 @@ for c in ((0, 0), (11, 0), (11, 11), (0, 11)):
 
 
 def show_coord(c):
+    # show an oriented tile at a given coordinate
     tile_id, rotidx = coordinates[c]
     show(orientations(tiles[tile_id])[rotidx])
 
 
 def shrink(tile):
     # turn tile into a smaller version of itself
+    # remove the borders
     nu_tile = deepcopy(tile)
     shrunk = [line[1:-1] for line in nu_tile[1:-1]]
     return shrunk
 
 
-test = [[i for i in range(6)] for _ in range(6)]
-
+# run through positioned tiles and set coordinates on a big, global tile
 big_coords = dict()
-bigy = 0
-bigx = 0
+maxy = 0
+maxx = 0
 for y in range(12):
     for x in range(12):
         tile_id, rotidx = coordinates[(x, y)]
@@ -347,17 +363,17 @@ for y in range(12):
                 val = cur[yy][xx]  # true or false
                 xxx = x * dimx + xx
                 yyy = y * dimy + yy
-                if yyy > bigy:
-                    bigy = yyy
-                if xxx > bigx:
-                    bigx = xxx
+                if yyy > maxy:
+                    maxy = yyy
+                if xxx > maxx:
+                    maxx = xxx
                 big_coords[(xxx, yyy)] = val
 
 # we now have T/F on a big grid with all the shrinking and rotations applied
 # grid is 8x8 x 12x12 = 9216 squares
 big_tile = []
-for y in range(bigy + 1):
-    cur_line = [big_coords[(x, y)] for x in range(bigx + 1)]
+for y in range(maxy + 1):
+    cur_line = [big_coords[(x, y)] for x in range(maxy + 1)]
     big_tile.append(cur_line)
 
 # show2(big_tile)
@@ -367,43 +383,55 @@ sea_monster = """\
 #    ##    ##    ###
  #  #  #  #  #  #   
 """
+print(sea_monster)
 sl = sea_monster.splitlines()
-print(sl)
 monster_positions = []
 for y in range(len(sl)):
     for x in range(len(sl[y])):
         if sl[y][x] == "#":
             monster_positions.append((x, y))
 
+# we have eight sea orientations, let's find our monsters in them
 max_monster_count = 0
 for idx, sea in E(orientations(big_tile)):
     coord_is_monster = set()
     monster_count = 0
-    for ybox in range(len(sea)):
-        for xbox in range(len(sea[ybox])):
-            try:
-                check_coords = [(x + xbox, y + ybox) for x, y in monster_positions]
-                ismon = all([sea[yy][xx] == True for xx, yy in check_coords])
-                if ismon:
-                    for c in check_coords:
-                        if c in coord_is_monster:
-                            print("ALREATDDY")
-                        coord_is_monster.add(c)
-                    print('monster at: ', xbox, ybox)
-                    monster_count += 1
-                    if monster_count > max_monster_count:
-                        max_monster_count = monster_count
-            except:
-                pass
+    height_rg = range(len(sea))
+    width_rg = range(len(sea[0]))
+    # xbox, ybox define the top left corner for a candidate monster-shape
+    for ybox in height_rg:
+        for xbox in width_rg:
+            # check these coords in sea to see if all active ("a monster")
+            check_coords = [(x + xbox, y + ybox) for x, y in monster_positions]
+            inbounds = all(
+                [yy in height_rg and xx in width_rg for xx, yy in check_coords]
+            )
+            if not inbounds:
+                continue
+            ismon = all([sea[yy][xx] == True for xx, yy in check_coords])
+            if ismon:
+                # we found a moenster
+                for c in check_coords:
+                    if c in coord_is_monster:
+                        print("Monster collision at ", c)
+                        assert False, c
+                    coord_is_monster.add(c)
+                print("monster at: ", xbox, ybox)
+                monster_count += 1
+                if monster_count > max_monster_count:
+                    max_monster_count = monster_count
     if monster_count:
+        # only one sea has any monsters in it. end search if found
         print(f"{monster_count} monsters at sea[{idx}]")
         # show(sea, spacing='', monsters=coord_is_monster)
         break
 tot = 0
+# count active tiles
 for y in range(len(big_tile)):
     for x in range(len(big_tile[y])):
         if big_tile[y][x] == True:
             tot += 1
+# remove monster-tiles from count
 tot -= max_monster_count * len(monster_positions)
 ans(tot)  # 2495
 # not 2719 (too high)
