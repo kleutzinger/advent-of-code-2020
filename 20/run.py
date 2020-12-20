@@ -163,19 +163,48 @@ positions = dict()
 # position
 
 
-def show(t):
+def show(t, spacing = ' ',monsters=set()):
     out = ""
+    s = spacing
     for y in range(len(t)):
         for x in range(len(t[y])):
             cur = t[y][x]
-            if cur is True:
-                out += "# "
+            if (x, y) in monsters:
+                out += "O" + s
+            elif cur is True:
+                out += "#" + s
             elif cur is False:
-                out += "  "
+                out += "." + s
             else:
-                out += str(cur)[0] + " "
+                out += str(cur)[0] + s
         out += "\n"
     out = out[:-1]
+    print(out)
+
+
+def show2(t, monsters = set()):
+    # with spaces between lines and columns
+    out = ""
+    width = len(t[0])
+    posts = width // 12
+    hoz_line = " " * (width + posts + 1)
+    for y in range(len(t)):
+        for x in range(len(t[y])):
+            cur = t[y][x]
+            if (x, y) in monsters:
+                out += "O"
+            elif cur is True:
+                out += "#"
+            elif cur is False:
+                out += "."
+            else:
+                out += str(cur)[0]
+            if ((x+1) % posts)  == 0:
+                out += " "
+        if ((y+1) % posts)  == 0:
+            out += "\n" + hoz_line + "\n"
+        else:
+            out += "\n"
     print(out)
 
 
@@ -331,7 +360,8 @@ for y in range(bigy + 1):
     cur_line = [big_coords[(x, y)] for x in range(bigx + 1)]
     big_tile.append(cur_line)
 
-
+# show2(big_tile)
+# exit()
 sea_monster = """\
                   # 
 #    ##    ##    ###
@@ -367,7 +397,8 @@ for idx, sea in E(orientations(big_tile)):
                 pass
     if monster_count:
         print(f"{monster_count} monsters at sea[{idx}]")
-
+        # show(sea, spacing='', monsters=coord_is_monster)
+        break
 tot = 0
 for y in range(len(big_tile)):
     for x in range(len(big_tile[y])):
