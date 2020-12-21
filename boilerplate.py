@@ -20,7 +20,7 @@ except:
 line_groups = data.split("\n\n")  # lines split by double newlines
 # line_groups = [l.strip() for l in line_groups]  # remove trailing newlines
 # print(lines)
-print(len(lines), "lines in", input_file)
+print(f"{len(lines)} lines in {input_file}\n")
 
 
 def coords(arr2d):
@@ -39,7 +39,7 @@ def powerset(iterable):
 
 def ans(answer):
     # store answer to clipboard
-    print(answer, "| in clipboard")
+    print(answer, "| in clipboard\n")
     os.system(f'echo "{answer}"| xclip -selection clipboard -in')
 
 

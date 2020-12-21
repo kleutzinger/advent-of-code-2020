@@ -20,7 +20,7 @@ except:
 line_groups = data.split("\n\n")  # lines split by double newlines
 # line_groups = [l.strip() for l in line_groups]  # remove trailing newlines
 # print(lines)
-print(len(lines), "lines in", input_file)
+print(f"{len(lines)} lines in {input_file}\n")
 
 
 def coords(arr2d):
@@ -39,7 +39,7 @@ def powerset(iterable):
 
 def ans(answer):
     # store answer to clipboard
-    print(answer, "| in clipboard")
+    print(answer, "| in clipboard\n")
     os.system(f'echo "{answer}"| xclip -selection clipboard -in')
 
 
@@ -55,8 +55,6 @@ P, E, R, M = print, enumerate, range, map
 
 
 def line_transform(line):
-    # split = [line.split() for line in lines]
-    # return int(line)
     left, right = line.split(" (contains ")
     right = right[:-1]
     return left.split(" "), right.split(", ")
@@ -67,20 +65,15 @@ lines = [line_transform(line) for line in lines]  # apply line_transform to each
 english_words = set()
 candidates = dict()
 
-gibb = []
-eng = []
 
 l_sets = []
 r_sets = []
 for idx, line in enumerate(lines):
-    ingr, allg = line
-    for a in allg:
-        english_words.add(a)
-    l_sets.append(set(ingr))
-    r_sets.append(set(allg))
-    gibb.append(ingr)
-    eng.append(allg)
-    print(ingr, allg)
+    gibberish, english = line
+    for e in english:
+        english_words.add(e)
+    l_sets.append(set(gibberish))
+    r_sets.append(set(english))
 
 for english_word in english_words:
     possible_translations = []
@@ -89,11 +82,11 @@ for english_word in english_words:
             possible_translations.append(l)
     intersect = set.intersection(*possible_translations)
     candidates[english_word] = intersect
-    print(english_word, intersect)
+    spacer = " " * (9 - len(english_word))
+    print(english_word, spacer + "∈", intersect)
 
-
+# below is similar to my solution for the ticketing problem
 done = False
-a_discard = False
 discarded = set()
 while not done:
     for english_word, gset in candidates.items():
@@ -104,19 +97,37 @@ while not done:
             discarded.add(english_word)
             break
     if all([len(s) == 1 for s in candidates.values()]):
-        # all rules have a single column
+        # all english words have a single translation
         done = True
-allergens = set()
-for i in candidates.values():
-    allergens.update(i)
+
+print()
+
+for e in english_words:
+    arrow = "-" * (9 - len(e)) + ">"
+    print(e, arrow, list(candidates[e])[0])
+
+dangerous_gibberish = set()
+for gib in candidates.values():
+    dangerous_gibberish.update(gib)
+
 tot = 0
-for left, r in lines:
-    for ing in left:
-        if ing not in allergens:
+for left, _ in lines:
+    for gib in left:
+        if gib not in dangerous_gibberish:
             tot += 1
+
+print("\nnumber of non-dangerous ingredients:")
 ans(tot)  # 2061
 
 s = list(sorted([e for e in english_words]))
-s = [candidates[i].pop() for i in s]
+s = [candidates[e].pop() for e in s]
 s = ",".join(s)
+print("killer ingredients sorted by their english translation:")
 ans(s)  # cdqvp,dglm,zhqjs,rbpg,xvtrfz,tgmzqjz,mfqgx,rffqhl
+
+# this problem was kind of poorly written. it was the same as the
+# ticket-numbering problem, but the wording was pretty off this time. it didn't
+# seem like there was a one-to-one correspondence between allergens and
+# ingredients. the wording made it sound like nskl and xbxcvz could both contain
+# milk. part 2 was somewhat trivial, really, but after yesterday's monster
+# hunting, I'm not complaining.

@@ -1,0 +1,26 @@
+36 lines in input.txt
+
+shellfish ∈ {'tgmzqjz'}
+dairy     ∈ {'xvtrfz', 'mfqgx', 'tgmzqjz', 'cdqvp'}
+eggs      ∈ {'dglm', 'rffqhl', 'tgmzqjz'}
+peanuts   ∈ {'tgmzqjz', 'zhqjs', 'rbpg'}
+fish      ∈ {'xvtrfz', 'mfqgx', 'zhqjs', 'tgmzqjz'}
+wheat     ∈ {'rffqhl', 'cdqvp'}
+sesame    ∈ {'xvtrfz', 'mfqgx', 'tgmzqjz'}
+soy       ∈ {'mfqgx', 'tgmzqjz'}
+
+shellfish > tgmzqjz
+dairy ----> cdqvp
+eggs -----> dglm
+peanuts --> rbpg
+fish -----> zhqjs
+wheat ----> rffqhl
+sesame ---> xvtrfz
+soy ------> mfqgx
+
+number of non-dangerous ingredients:
+2061 | in clipboard
+
+killer ingredients sorted by their english translation:
+cdqvp,dglm,zhqjs,rbpg,xvtrfz,tgmzqjz,mfqgx,rffqhl | in clipboard
+
