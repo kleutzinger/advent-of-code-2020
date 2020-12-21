@@ -140,7 +140,6 @@ while not done:
                 done = True
             break
 
-
 my_ticket = []
 for ticket in middle.split("\n")[1:]:
     for num in ticket.strip().split(","):
