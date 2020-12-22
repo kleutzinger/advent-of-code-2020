@@ -53,20 +53,13 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-
-def line_transform(line):
-    # split = [line.split() for line in lines]
-    # return int(line)
-    return line
-
-
 p1 = []
 p2 = []
 groups = data.split("\n\n")
+PRINT_OUTPUT = "p" in sys.argv
 
-for idx, p in E(groups):
+for idx, p in enumerate(groups):
     for line in p.split("\n")[1:]:
-        print(line)
         if line == "":
             continue
         if idx == 0:
@@ -74,9 +67,9 @@ for idx, p in E(groups):
         else:
             p2.append(int(line))
 
-pp1 = deepcopy(p1)
-pp2 = deepcopy(p2)
-print(len(p1), len(p2))
+# for part 2
+p1_backup = p1.copy()
+p2_backup = p2.copy()
 
 while True:
     c1, c2 = p1[0], p2[0]
@@ -90,88 +83,83 @@ while True:
     if len(p1) * len(p2) == 0:
         break
 
-print(p1, p2)
-
 
 def score(deck):
     score = 0
-    for idx, c in E(deck[::-1]):
+    for idx, c in enumerate(deck[::-1]):
         score += (idx + 1) * c
     return score
 
 
+print("Winning score (part 1):")
 ans(max(score(p1), score(p2)))  # 32472
 
-# same decks: win for p1
+print("----- Part 2 -----\n")
 
-played = set()
-l1 = []
-l2 = []
+p1, p2 = p1_backup, p2_backup
 
-p1 = pp1
-p2 = pp2
 if "b" in sys.argv:
+    # example input, ans = 291
     p1 = [9, 2, 6, 3, 1]
     p2 = [5, 8, 4, 7, 10]
 
-if "c" in sys.argv:
-    p1 = [43, 19]
-    p2 = [2, 29, 14]
-
-
-import random
-
-GAME_COUNT = 1
+TOTAL_GAME_COUNT = 1
 seen_decks_by_game = dict()
 
+deck2str = lambda d: " ".join(map(str, d))
 
-def Round(p1, p2, ROUND=1, GAME=None):
+
+def print_round(p1, p2, game_num, round_num):
+    c1 = p1[0]
+    c2 = p2[0]
+    s = f"Round {round_num} of Game {game_num}:\n"
+    s += f"Player 1's deck: {deck2str(p1)}\n"
+    s += f"Player 2's deck: {deck2str(p2)}\n"
+    s += f"Player 1 plays : {c1}\n"
+    s += f"Player 2 plays : {c2}\n"
+    print(s)
+
+
+# Runs a single round
+# give p1 and p2 decks, and a game number
+# returns 1, 2, or -1
+# returning 1 or 2 is player1/2 winning
+# returning -1 means this was a deck combo already seen in this game_num,
+#   ending the round and game instantly
+def Round(p1, p2, game_num, round_num=1):
     c1, c2 = p1[0], p2[0]
-    s = f"""
-    ROUND {ROUND} of {GAME}
-    Player 1's deck: {p1}
-    Player 2's deck: {p2}
-    Player 1 plays: {c1}
-    Player 2 plays: {c2} """
-    if "p" in sys.argv:
-        print(s)
+    if PRINT_OUTPUT:
+        print_round(p1, p2, game_num, round_num)
     decks = (tuple(p1), tuple(p2))
-    seen_already = seen_decks_by_game.get(GAME, set())
+    seen_already = seen_decks_by_game.get(game_num, set())
     if decks in seen_already:
-        # print("p1 wins by duplication")
+        # win game by duplication
         return -1
     else:
         seen_already.add(decks)
-        seen_decks_by_game[GAME] = seen_already
-        # print(len(seen_already))
-    # p1 = p1[1:].copy()
-    # p2 = p2[1:].copy()
-    ROUND += 1
+        seen_decks_by_game[game_num] = seen_already
     if len(p1) <= c1 or len(p2) <= c2:
-        # cant recurse
-        # print('cant recurse')
+        # deck too small to recurse, return winner by card
         if c1 > c2:
             return 1
         else:
             return 2
-    # recurse game
-    # pop cards here?
     else:
-        # print(f'recursing depth: {GAME}')
-        dd1 = p1[1 : c1 + 1]
-        dd2 = p2[1 : c2 + 1]
-        global GAME_COUNT
-        GAME_COUNT += 1
-        winner = game(dd1, dd2, inner=True, GAME=GAME_COUNT)
-        # print(f'end depth: {GAME}')
-
+        # spawn new subgame to determine round winner
+        # partial decks:
+        p1_sub = p1[1 : c1 + 1]
+        p2_sub = p2[1 : c2 + 1]
+        # I wonder if there's a way to avoid a global variable
+        # game_num=random.random() works probably always
+        global TOTAL_GAME_COUNT
+        TOTAL_GAME_COUNT += 1
+        winner = game(p1_sub, p2_sub, game_num=TOTAL_GAME_COUNT)
         return winner
 
 
-# round returns 1 or 2 simply
-# might have to recurse into a game
-# to determine this, though
-def len_win(p1, p2):
+# Check for an empty deck and return the winning player number
+# otherwise return None
+def check_victor(p1, p2):
     if len(p1) == 0:
         return 2
     if len(p2) == 0:
@@ -179,45 +167,46 @@ def len_win(p1, p2):
     return None
 
 
-smallest_ever = len(p1)
-
-
-def game(p1, p2, inner=True, GAME=1):
-    # runs until p1 or p2 is empty
-    game_victor = len_win(p1, p2)
+# There is a single outer game
+# rounds are spawned until p1 or p2 is empty
+# subgames may be spawned inside a round to determine a round-winner
+# a round may signal a duplicate deck, triggering a game end (p1 win)
+# subgames are the same as games, but winning the outer game ends the program
+def game(p1, p2, game_num=1):
+    game_victor = check_victor(p1, p2)
     round_count = 0
-    global GAME_COUNT
+    # runs until p1 or p2 is empty
     while game_victor == None:
-        # input()
+        # input(); PRINT_OUTPUT = True ## debug
         round_count += 1
-        round_winner = Round(p1, p2, ROUND=round_count, GAME=GAME)
+        round_winner = Round(p1, p2, game_num, round_num=round_count)
         if round_winner == -1:
             # duplicate round, end GAME
             return 1
-        c1, c2 = p1[0], p2[0]  # draw card
-        p1, p2 = p1[1:], p2[1:]  # pop drawn card
-        # print(f"Player {round_winner} wins round {round_count}")
-
+        c1, c2 = p1[0], p2[0]  # topdeck
+        p1, p2 = p1[1:], p2[1:]  # remove drawn cards
         if round_winner == 1:
             p1 = p1 + [c1, c2]
         else:
             p2 = p2 + [c2, c1]
-        game_victor = len_win(p1, p2)
-    winning_deck = [0, p1, p2][game_victor]
-    if inner == False:
-        print(game_victor)
-        print(winning_deck)
+        game_victor = check_victor(p1, p2)
+    winning_deck = (p1, p2)[game_victor - 1]
+    if PRINT_OUTPUT:
+        print(f"-- Player {game_victor} wins game {game_num} --\n")
+    if game_num == 1:  # outer game
+        print(f"Overall winner: Player {game_victor}")
+        print(f"Final deck:\n{deck2str(winning_deck)}")
+        print(f"Total nested game count: {TOTAL_GAME_COUNT:,}")
+        total_rounds = sum([len(i) for i in seen_decks_by_game.values()])
+        print(f"Total rounds played: {total_rounds:,}")
+        print("Winning score:")
         ans(score(winning_deck))  # 36463
-        exit()
-    if "p" in sys.argv:
-        print(f"player {game_victor} wins game {GAME}")
     return game_victor
 
 
-print(p1, p2)
-print(game(p1, p2, inner=False, GAME=1))
+# spawn outer game to find answer
+game(p1, p2, game_num=1)
 
-# ans(max(score(p1), score(p2)))
 # not 34625
 # not 33417
 # not 31540

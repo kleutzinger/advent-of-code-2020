@@ -1,0 +1,196 @@
+Winning score (part 1):
+32472 | in clipboard
+
+----- Part 2 -----
+
+Round 1 of Game 1:
+Player 1's deck: 9 2 6 3 1
+Player 2's deck: 5 8 4 7 10
+Player 1 plays : 9
+Player 2 plays : 5
+
+Round 2 of Game 1:
+Player 1's deck: 2 6 3 1 9 5
+Player 2's deck: 8 4 7 10
+Player 1 plays : 2
+Player 2 plays : 8
+
+Round 3 of Game 1:
+Player 1's deck: 6 3 1 9 5
+Player 2's deck: 4 7 10 8 2
+Player 1 plays : 6
+Player 2 plays : 4
+
+Round 4 of Game 1:
+Player 1's deck: 3 1 9 5 6 4
+Player 2's deck: 7 10 8 2
+Player 1 plays : 3
+Player 2 plays : 7
+
+Round 5 of Game 1:
+Player 1's deck: 1 9 5 6 4
+Player 2's deck: 10 8 2 7 3
+Player 1 plays : 1
+Player 2 plays : 10
+
+Round 6 of Game 1:
+Player 1's deck: 9 5 6 4
+Player 2's deck: 8 2 7 3 10 1
+Player 1 plays : 9
+Player 2 plays : 8
+
+Round 7 of Game 1:
+Player 1's deck: 5 6 4 9 8
+Player 2's deck: 2 7 3 10 1
+Player 1 plays : 5
+Player 2 plays : 2
+
+Round 8 of Game 1:
+Player 1's deck: 6 4 9 8 5 2
+Player 2's deck: 7 3 10 1
+Player 1 plays : 6
+Player 2 plays : 7
+
+Round 9 of Game 1:
+Player 1's deck: 4 9 8 5 2
+Player 2's deck: 3 10 1 7 6
+Player 1 plays : 4
+Player 2 plays : 3
+
+Round 1 of Game 2:
+Player 1's deck: 9 8 5 2
+Player 2's deck: 10 1 7
+Player 1 plays : 9
+Player 2 plays : 10
+
+Round 2 of Game 2:
+Player 1's deck: 8 5 2
+Player 2's deck: 1 7 10 9
+Player 1 plays : 8
+Player 2 plays : 1
+
+Round 3 of Game 2:
+Player 1's deck: 5 2 8 1
+Player 2's deck: 7 10 9
+Player 1 plays : 5
+Player 2 plays : 7
+
+Round 4 of Game 2:
+Player 1's deck: 2 8 1
+Player 2's deck: 10 9 7 5
+Player 1 plays : 2
+Player 2 plays : 10
+
+Round 5 of Game 2:
+Player 1's deck: 8 1
+Player 2's deck: 9 7 5 10 2
+Player 1 plays : 8
+Player 2 plays : 9
+
+Round 6 of Game 2:
+Player 1's deck: 1
+Player 2's deck: 7 5 10 2 9 8
+Player 1 plays : 1
+Player 2 plays : 7
+
+-- Player 2 wins game 2 --
+
+Round 10 of Game 1:
+Player 1's deck: 9 8 5 2
+Player 2's deck: 10 1 7 6 3 4
+Player 1 plays : 9
+Player 2 plays : 10
+
+Round 11 of Game 1:
+Player 1's deck: 8 5 2
+Player 2's deck: 1 7 6 3 4 10 9
+Player 1 plays : 8
+Player 2 plays : 1
+
+Round 12 of Game 1:
+Player 1's deck: 5 2 8 1
+Player 2's deck: 7 6 3 4 10 9
+Player 1 plays : 5
+Player 2 plays : 7
+
+Round 13 of Game 1:
+Player 1's deck: 2 8 1
+Player 2's deck: 6 3 4 10 9 7 5
+Player 1 plays : 2
+Player 2 plays : 6
+
+Round 1 of Game 3:
+Player 1's deck: 8 1
+Player 2's deck: 3 4 10 9 7 5
+Player 1 plays : 8
+Player 2 plays : 3
+
+Round 2 of Game 3:
+Player 1's deck: 1 8 3
+Player 2's deck: 4 10 9 7 5
+Player 1 plays : 1
+Player 2 plays : 4
+
+Round 1 of Game 4:
+Player 1's deck: 8
+Player 2's deck: 10 9 7 5
+Player 1 plays : 8
+Player 2 plays : 10
+
+-- Player 2 wins game 4 --
+
+Round 3 of Game 3:
+Player 1's deck: 8 3
+Player 2's deck: 10 9 7 5 4 1
+Player 1 plays : 8
+Player 2 plays : 10
+
+Round 4 of Game 3:
+Player 1's deck: 3
+Player 2's deck: 9 7 5 4 1 10 8
+Player 1 plays : 3
+Player 2 plays : 9
+
+-- Player 2 wins game 3 --
+
+Round 14 of Game 1:
+Player 1's deck: 8 1
+Player 2's deck: 3 4 10 9 7 5 6 2
+Player 1 plays : 8
+Player 2 plays : 3
+
+Round 15 of Game 1:
+Player 1's deck: 1 8 3
+Player 2's deck: 4 10 9 7 5 6 2
+Player 1 plays : 1
+Player 2 plays : 4
+
+Round 1 of Game 5:
+Player 1's deck: 8
+Player 2's deck: 10 9 7 5
+Player 1 plays : 8
+Player 2 plays : 10
+
+-- Player 2 wins game 5 --
+
+Round 16 of Game 1:
+Player 1's deck: 8 3
+Player 2's deck: 10 9 7 5 6 2 4 1
+Player 1 plays : 8
+Player 2 plays : 10
+
+Round 17 of Game 1:
+Player 1's deck: 3
+Player 2's deck: 9 7 5 6 2 4 1 10 8
+Player 1 plays : 3
+Player 2 plays : 9
+
+-- Player 2 wins game 1 --
+
+Overall winner: Player 2
+Final deck:
+7 5 6 2 4 1 10 8 9 3
+Total nested game count: 5
+Total rounds played: 29
+Winning score:
+291 | in clipboard
