@@ -41,7 +41,6 @@ def ans(answer):
     from distutils.spawn import find_executable
 
     xclip_path = find_executable("xclip")
-    print(xclip_path)
     if xclip_path:
         os.system(f'echo "{answer}"| {xclip_path} -selection clipboard -in')
         print("\t", answer, "| in clipboard\n")
@@ -59,54 +58,108 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
+
+from collections import deque
+
 cups = []
 for num in data:
     if num in "\n ":
         continue
     cups.append(int(num))
 
-print(cups)
 example = list(map(int, list("389125467")))
 
+if "e" in sys.argv:
+    cups = example
 
-def move(cups=cups, cur_idx=0):
+PT2 = False
+verbose = False
+if "v" in sys.argv:
+    verbose = True
+outer_wheel = []
+if "b" in sys.argv:
+    PT2 = True
     max_cup = max(cups)
-    cur_val = cups[cur_idx]
-    print(f"Cups: {cups}\nval({cur_val})")
-    size = len(cups)
-    next_three = []
-    for i in (1, 2, 3):
-        nidx = (cur_idx + i) % size
-        next_three.append(cups[nidx])
-    for i in next_three:
-        cups.remove(i)
-    dest_val = cur_val - 1
-    while dest_val not in cups:
+    while max_cup < 1_000_000:
+        max_cup += 1
+        outer_wheel.append(max_cup)
+    outer_wheel = deque(outer_wheel)
+cupset = set(cups)
+
+# Declaring deque
+wheel = deque(cups)
+
+max_cup = max(wheel)
+deck = deque(cups)
+
+size = len(deck)
+
+
+
+# deck = list(deck)
+cur_idx = 0
+limit = 10_000_000
+accessed = set()
+if not PT2:  # b to enable bigass numbers
+    limit = 100
+max_cup = max(wheel)
+for iters in range(limit):
+    if iters % 100 == 0:
+        print(iters)
+    cur_val = wheel[0]
+    dest_val = cur_val - 1 or max_cup  # avoid 0
+    if verbose:
+        input("-------move: " + str(iters + 1))
+        print(f"({wheel[0]})")
+        # print(wheel)
+    wheel.rotate(-1)
+    # cur is WHEEL 0
+    # gotta find the dest_val quickly
+    # print(f"Cups: {cups}\nval({cur_val})" )
+    next_three = [wheel.popleft() for _ in range(3)]
+    wheel.rotate(1)  # put cur back at start
+    while dest_val in next_three:
         dest_val -= 1
         if dest_val <= 0:
-            dest_val = 9
-    print(f"Pick up: {next_three}")
-    print(f"destination {dest_val}")
-    dest_idx = cups.index(dest_val)
-    for i, v in E(next_three):
-        into = dest_idx + i + 1
-        cups.insert(into, v)
-    new_idx = (cups.index(cur_val) + 1) % size
-    return cups, new_idx
+            dest_val = max_cup
+    rot_diff = 0
+    while wheel[-1] != dest_val:
+        wheel.rotate(-1)
+        rot_diff -= 1
+        if abs(rot_diff) > 1000:
+            exit("bad rotation")
+    wheel.extendleft(next_three[::-1])
+    wheel.rotate(-rot_diff or - 3)
+    # print("postrot", wheel, f"({cur_val}) 1st?")
+    # print("wheel0 ", wheel[0], "cur_val", cur_val)
+    assert wheel[0] == cur_val
+    # print('idx of VAL', wheel.index(cur_val))
+    # print('wheel[0]', wheel[0])
+    if verbose == True:
+        print("pick up: ", next_three)
+        print(f"destination: {dest_val}")
 
+    else:
+        pass
+    next_three = []
+    wheel.rotate(-1)
+    # cur_idx = ( deck.index(cur_val) + 1 ) % size
 
-cups = cups
-idx = 0
-for i in range(100):
-    print(f"-- move {i+1} --")
-    cups, idx = move(cups, idx)
-
-print(cups)
+# insert chunks behind deque onto a separate deck
+# i think i need 2 decks
+# a center "relevant one"
+# the wraparound one which keeps track of 50 to 1 mil
+# they'll pop and extend onto each other
 
 out = []
-one = cups.index(1)
+one = wheel.index(1)
 print(one)
+
+# stars = deck[one], deck[one + 1]
+# print('idx: ', one, " +1, +2")
+# print(stars)
+# ans(stars[0] * stars[1])
 for i in range(8):
-    out.append((cups + cups)[i + one + 1])
+    out.append((wheel + wheel)[i + one + 1])
 
 ans("".join(map(str, out)))  # 89372645
