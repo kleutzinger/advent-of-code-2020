@@ -41,6 +41,7 @@ def ans(answer):
     from distutils.spawn import find_executable
 
     xclip_path = find_executable("xclip")
+    print(xclip_path)
     if xclip_path:
         os.system(f'echo "{answer}"| {xclip_path} -selection clipboard -in')
         print("\t", answer, "| in clipboard\n")
@@ -58,14 +59,54 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
+cups = []
+for num in data:
+    if num in "\n ":
+        continue
+    cups.append(int(num))
 
-def line_transform(line):
-    # split = [line.split() for line in lines]
-    # return int(line)
-    return line
+print(cups)
+example = list(map(int, list("389125467")))
 
 
-lines = [line_transform(line) for line in lines]  # apply line_transform to each line
+def move(cups=cups, cur_idx=0):
+    max_cup = max(cups)
+    cur_val = cups[cur_idx]
+    print(f"Cups: {cups}\nval({cur_val})")
+    size = len(cups)
+    next_three = []
+    for i in (1, 2, 3):
+        nidx = (cur_idx + i) % size
+        next_three.append(cups[nidx])
+    for i in next_three:
+        cups.remove(i)
+    dest_val = cur_val - 1
+    while dest_val not in cups:
+        dest_val -= 1
+        if dest_val <= 0:
+            dest_val = 9
+    print(f"Pick up: {next_three}")
+    print(f"destination {dest_val}")
+    dest_idx = cups.index(dest_val)
+    for i, v in E(next_three):
+        into = dest_idx + i + 1
+        cups.insert(into, v)
+    new_idx = (cups.index(cur_val) + 1) % size
+    return cups, new_idx
 
-for idx, line in enumerate(lines):
-    pass
+
+cups = cups
+idx = 0
+for i in range(100):
+    print(f"-- move {i+1} --")
+    cups, idx = move(cups, idx)
+
+print(cups)
+
+out = []
+one = cups.index(1)
+print(one)
+for i in range(8):
+    out.append((cups + cups)[i + one + 1])
+
+ans("".join(map(str, out)))  # 89372645
