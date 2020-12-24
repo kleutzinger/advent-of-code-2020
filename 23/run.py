@@ -77,13 +77,20 @@ verbose = False
 if "v" in sys.argv:
     verbose = True
 outer_wheel = []
-if "b" in sys.argv:
+if "b" in sys.argv or "c" in sys.argv:
     PT2 = True
     max_cup = max(cups)
-    while max_cup < 1_000_000:
+
+    biggest_num = 1_000_000
+    if "c" in sys.argv:
+        biggest_num = 100
+    while max_cup < biggest_num:
         max_cup += 1
         outer_wheel.append(max_cup)
+        cups.append(max_cup)
     outer_wheel = deque(outer_wheel)
+
+
 cupset = set(cups)
 
 # Declaring deque
@@ -92,10 +99,42 @@ wheel = deque(cups)
 max_cup = max(wheel)
 deck = deque(cups)
 
-size = len(deck)
+size = len(wheel)
 
 
+def answer_pt1_wheel(wheel):
+    out = []
+    one = wheel.index(1)
+    print(one)
+    for i in range(8):
+        out.append((wheel + wheel)[i + one + 1])
+    ans("".join(map(str, out)))  # 89372645
+    print("ans example 100: 67384529")
+    print("ans inp.txt 100: 89372645")
 
+
+def print_near_one(wheel, surround=10):
+    if len(wheel) < 20:
+        print(wheel)
+        return
+    one = wheel.index(1)
+    size = len(wheel)
+    surround = 10
+    # fmt:off
+    one_rg = [wheel[i] for i in range(((one+surround) % size)-(surround*2), (one+surround) %size ,1)]
+    # fmt:on
+    print("L1:", one_rg[:surround])
+    print(1, "idx:", one)
+    print("R1", one_rg[surround + 1 :])
+
+    # print(wheel)
+
+    pass
+
+
+printwheel = False
+if len(wheel) < 105:
+    print(wheel)
 # deck = list(deck)
 cur_idx = 0
 limit = 10_000_000
@@ -109,7 +148,7 @@ for iters in range(limit):
     cur_val = wheel[0]
     dest_val = cur_val - 1 or max_cup  # avoid 0
     if verbose:
-        input("-------move: " + str(iters + 1))
+        printwheel = input("-------move: " + str(iters + 1))
         print(f"({wheel[0]})")
         # print(wheel)
     wheel.rotate(-1)
@@ -123,15 +162,18 @@ for iters in range(limit):
         if dest_val <= 0:
             dest_val = max_cup
     rot_diff = 0
+    if verbose:
+        dest_idx = wheel.index(dest_val)
+        dest_surr = (wheel[dest_idx - 1], dest_val, wheel[(dest_idx + 1) % size])
     while wheel[-1] != dest_val:
         wheel.rotate(-1)
         rot_diff -= 1
         if abs(rot_diff) > 1000:
             exit("bad rotation")
     wheel.extendleft(next_three[::-1])
-    wheel.rotate(-rot_diff or - 3)
+    wheel.rotate(-rot_diff or -3)
     # print("postrot", wheel, f"({cur_val}) 1st?")
-    # print("wheel0 ", wheel[0], "cur_val", cur_val)
+    print("wheel0 ", wheel[0], "cur_val", cur_val)
     assert wheel[0] == cur_val
     # print('idx of VAL', wheel.index(cur_val))
     # print('wheel[0]', wheel[0])
@@ -139,10 +181,18 @@ for iters in range(limit):
         print("pick up: ", next_three)
         print(f"destination: {dest_val}")
 
+        print("-1, dest, +1", dest_surr)
+        print("dest +- 1: ")
+        print_near_one(wheel, 10)
+        if printwheel:
+            print(wheel)
+        printwheel = False
     else:
         pass
     next_three = []
     wheel.rotate(-1)
+    if iters == 99:
+        answer_pt1_wheel(wheel)
     # cur_idx = ( deck.index(cur_val) + 1 ) % size
 
 # insert chunks behind deque onto a separate deck
@@ -151,15 +201,8 @@ for iters in range(limit):
 # the wraparound one which keeps track of 50 to 1 mil
 # they'll pop and extend onto each other
 
-out = []
-one = wheel.index(1)
-print(one)
 
 # stars = deck[one], deck[one + 1]
 # print('idx: ', one, " +1, +2")
 # print(stars)
 # ans(stars[0] * stars[1])
-for i in range(8):
-    out.append((wheel + wheel)[i + one + 1])
-
-ans("".join(map(str, out)))  # 89372645
