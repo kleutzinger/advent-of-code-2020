@@ -58,7 +58,8 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-
+# https://web.archive.org/web/20201224070727/http://roguebasin.roguelikedevelopment.org/index.php?title=Hexagonal_Tiles#Coordinate_systems_with_a_hex_grid
+# Even-only hexagonal coordinates
 dirs = {
     "e": (2, 0),
     "w": (-2, 0),
@@ -70,11 +71,12 @@ dirs = {
 
 
 def line_transform(line):
+    # turn lines into list of coordinate tuples
     nu_line = []
     running = ""
     for c in line:
         running += c
-        if running in dirs.keys():
+        if running in dirs:
             nu_line.append(dirs[running])
             running = ""
     return nu_line
@@ -93,66 +95,74 @@ for idx, line in enumerate(lines):
     cur = tiles.get((x, y), False)
     tiles[(x, y)] = not cur
 
-tot = 0
-for k, v in tiles.items():
-    if v == True:
-        tot += 1
-ans(tot)  # 465
+
+def count(tiles):
+    # number of alive (black) tiles on whole board
+    tot = 0
+    for state in tiles.values():
+        if state == True:
+            tot += 1
+    return tot
 
 
-neighbor_coords = dirs.values()
+print(f"Number of black tiles after {len(lines)} flips")
+ans(count(tiles))  # 465
+
+print("####   Part 2   ####\n")
+
+neighbor_deltas = dirs.values()
 
 
 def get_neighbor_coords(x, y):
-    neighbors = []
-    for dx, dy in neighbor_coords:
-        xx = x + dx
-        yy = y + dy
-        neighbors.append((xx, yy))
-    return neighbors
+    # given a coordinate return all neighboring coordinates
+    # does not include own coordinate
+    for dx, dy in neighbor_deltas:
+        yield (x + dx, y + dy)
 
 
-def adjacent(_seats, x, y):
+def adjacent(tiles, x, y):
+    # count number of alive adjacent tiles
     adj = 0
     for xx, yy in get_neighbor_coords(x, y):
-        alive = _seats.get((xx, yy), False)
+        alive = tiles.get((xx, yy), False)
         if alive:
             adj += 1
     return adj
-
-
-def count(tiles):
-    tot = 0
-    for _, v in tiles.items():
-        if v == True:
-            tot += 1
-    return tot
 
 
 for i in range(100):
     to_check = set()
     nu_tiles = deepcopy(tiles)
     for coord, alive in tiles.items():
-        # check all tiles touching a live tiles
+        # mark all tiles that are live or touching a live tile
         if alive:
-            to_check.update(set(get_neighbor_coords(coord[0], coord[1])))
-            to_check.add(coord)  # do check self
+            # check yourself
+            to_check.add(coord)
+            # love thy neighbors
+            neighbor_locs = set(get_neighbor_coords(coord[0], coord[1]))
+            to_check.update(neighbor_locs)
     for coord in to_check:
+        # iterate all marked tiles
         alive = tiles.get(coord, False)
         adj = adjacent(tiles, coord[0], coord[1])
         if alive and (adj == 0 or adj > 2):
-            nu_tiles[coord] = False
+            # nu_tiles[coord] = False  # (1)
+            del nu_tiles[coord]  # (2)
         if not alive and adj == 2:
             nu_tiles[coord] = True
-    tiles = nu_tiles
+    # tiles = {k: v for k, v in nu_tiles.items() if v} # (1)
+    tiles = nu_tiles  # (2)
+
+print(f"Number of tiles after 100 iterations")
 ans(count(tiles))  # 4078
+
+# (1) and (2) are similar speed on this small input. There's not too many cells
+# deleted each iteration.
 
 """
 Any black tile with zero or more than 2 black tiles immediately adjacent to it is flipped to white.
 Any white tile with exactly 2 black tiles immediately adjacent to it is flipped to black.
-"""
 
-"""
 e, se, sw, w, nw, and ne
 
 (0,0) neighbors:

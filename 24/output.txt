@@ -1,0 +1,10 @@
+527 lines in input.txt
+
+Number of black tiles after 527 flips
+	 465 | in clipboard
+
+####   Part 2   ####
+
+Number of tiles after 100 iterations
+	 4078 | in clipboard
+
