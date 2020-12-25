@@ -58,25 +58,11 @@ P, E, R, M = print, enumerate, range, map
 
 ############### end of boilerplate #############################################
 
-
-def line_transform(line):
-    # split = [line.split() for line in lines]
-    # return int(line)
-    return int(line)
-
-
-lines = [line_transform(line) for line in lines]  # apply line_transform to each line
-
-for idx, line in enumerate(lines):
-    print(line)
-    pass
-
-
-a, b = lines
-mod = 20201227
-
+a, b = map(int, data.splitlines())
 door_pub = a
 card_pub = b
+
+mod = 20201227
 
 
 def trans(sub, loop_size):
@@ -103,5 +89,3 @@ secret = trans(door_pub, card_loop)
 secret2 = trans(card_pub, door_loop)
 ans(secret)  # 1478097
 ans(secret2)  # 1478097
-
-print(f)
