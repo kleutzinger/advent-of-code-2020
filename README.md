@@ -1,5 +1,6 @@
 # Kevin's Advent of Code 2020
-These are my solutions for [Advent of Code 2020](https://adventofcode.com/2020/)
+These are my solutions for [Advent of Code
+2020](https://adventofcode.com/2020/).
 
 ## About
 
@@ -8,53 +9,40 @@ in December. Each night from December 1-25, a new difficult word problem is
 released to the world at midnight EST. A challenge could be [following hundreds
 of instructions to navigate a ship at sea](12), or [keeping track of one million
 labelled cups shuffled ten million times](23). Solving part one of a problem
-unlocks a more difficult second part extension of the problem. [Some](20) took
-me over 5 hours of continuous work to complete. I avoided looking at hints or
-clues while making these, and the solutions are truly my own. Completing one
-part of a challenge grants you a golden star, and I was able to earn all 50
-after hours and hours of work and problem-solving. I've included some of my own
-statistics below.
+unlocks a more difficult second part extension of the problem. [Some
+problems](20) took me over 5 hours of continuous work to complete. I avoided
+looking at hints or clues while making these, and the solutions are truly my
+own. Completing one part of a challenge grants you a golden star, and I was able
+to earn all 50 after many hours of work and problem-solving. I've included
+[some of my statistics below](#my-stats).
 
-The challenges are open-ended in terms of how you choose to solve them. Some may
-even be solvable by hand (albeit slowly). [Python 3](https://www.python.org/)
-was my tool of choice. Challenges often required creative, optimized solutions
-in order to find an answer in a reasonable time.
+Each day required a creative, optimized solution in order to find an answer in a
+reasonable time. There are no restrictions on how you choose to solve a problem.
+[Python 3](https://www.python.org/) was my tool of choice.
+
+## Art
 
 ![see day 11](11/day_11_part_1.gif) ![see day 11](11/day_11_part_2.gif)
 
-Animations from [Day 11](11)
+Animations generated from [Day 11](11)
 
-## Running my solutions
-
-The programs I came up with are included in this repository organized by day.
-You can run them yourself by installing [Python 3](https://www.python.org/) and
-executing the `run.py` file contained in a day's folder. The goal was to write
-good-enough solutions quickly so the code can be somewhat terse or disorganized.
-Some days I went back and added comments to my code and reorganized. Though the
-logic of the solution remained the same.
-
-
-```sh
-# example command to run day 20's solution
-python 20/run.py
-```
 ## My Stats
 
 Each day I would try to solve a problem as quickly as possible. Below are some
 statistics given by the site on how well I did compared to other users. Everyone
-gets access to the problems at the same time (12:00pm EST). Each has day has a
+gets access to the problems at the same time (12:00pm EST). Each day has a
 `Time` and `Rank` for both part 1 and part 2.
 
 `Time` shows how long it took me to submit a correct solution after a problem's
-release. Completing part 1 unlocks part 2, and the timer keeps running.
+release. Completing part 1 logs a time and unlocks part 2.
 
 `Rank` A rank of 1,000 would mean I was the 1,000th person to complete that part
 of a challenge. A smaller number is better.
 
-Each day could have [anywhere from 10,000 to over 100,000
-users submitting answers](https://adventofcode.com/2020/stats), and I'm
-satisfied with my performances. I've included all the data in a table and some
-aggregate data below.
+Each day could have [anywhere from 10,000 to over 100,000 users submitting
+answers](https://adventofcode.com/2020/stats), and I'm satisfied with my
+performances. I've included all the data in a table and some aggregate data
+below.
 
 
 ```
@@ -92,3 +80,15 @@ Part   | Median Time | Median Rank  | Fastest Time| Best Rank
 -------| ------------| -------------|-------------|----------
 Part 1 | 00:22:15   | 1801    | 00:05:45 (day 6)   | 1004 (day 12)
 Part 2 | 01:27:52   | 3282    | 00:11:27 (day 6)   | 864 (day 5)
+
+## Running my Code
+
+The programs I came up with are included in this repository organized by day.
+You can run them yourself by installing [Python 3](https://www.python.org/) and
+executing the `run.py` file contained in a day's folder.
+
+```sh
+# example command to run day 20's solution
+cd 20
+python run.py
+```
